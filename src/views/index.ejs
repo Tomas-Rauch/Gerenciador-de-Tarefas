@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de Tarefas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container py-4">
+    <h1 class="mb-4 text-center">Gerenciador de Tarefas</h1>
+    
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Filtros</h5>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <select class="form-select filter-select" id="filtroTarefas">
+            <option value="todas" selected>Todas as tarefas</option>
+            <option value="pendentes">Pendentes</option>
+            <option value="concluidas">Concluídas</option>
+            <option value="atrasadas">Atrasadas</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><%= locals.tarefaEdit ? 'Editar Tarefa' : 'Nova Tarefa' %></h5>
+      </div>
+      <div class="card-body">
+        <form action="<%= locals.tarefaEdit ? `/tarefas/${tarefaEdit.id}` : '/tarefas' %>" method="POST">
+          <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" 
+                   value="<%= locals.tarefaEdit ? tarefaEdit.titulo : '' %>" required>
+          </div>
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea class="form-control" id="descricao" name="descricao" rows="3"><%= locals.tarefaEdit ? tarefaEdit.descricao : '' %></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="dataVencimento" class="form-label">Data de Vencimento</label>
+            <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" 
+                   value="<%= locals.tarefaEdit && tarefaEdit.dataVencimento ? new Date(tarefaEdit.dataVencimento).toISOString().split('T')[0] : '' %>">
+          </div>
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary" style="background-color: #4a9fe9; border-color: #4a9fe9;">
+              <%= locals.tarefaEdit ? 'Atualizar' : 'Adicionar' %> Tarefa
+            </button>
+            <% if (locals.tarefaEdit) { %>
+              <a href="/" class="btn btn-secondary">Cancelar</a>
+            <% } %>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Minhas Tarefas</h5>
+      </div>
+      <ul class="list-group list-group-flush" id="lista-tarefas">
+        <% if (tarefas && tarefas.length > 0) { %>
+          <% 
+            // Pré-contagem para verificar se existem tarefas nos filtros
+            let hasConcluidas = false;
+            let hasPendentes = false;
+            let hasAtrasadas = false;
+            
+            tarefas.forEach(tarefa => {
+              const hoje = new Date();
+              hoje.setHours(0, 0, 0, 0);
+              const vencimento = tarefa.dataVencimento ? new Date(tarefa.dataVencimento) : null;
+              vencimento && vencimento.setHours(0, 0, 0, 0);
+              const atrasada = !tarefa.concluida && vencimento && vencimento < hoje;
+              
+              if (tarefa.concluida) hasConcluidas = true;
+              if (!tarefa.concluida) hasPendentes = true;
+              if (atrasada) hasAtrasadas = true;
+            });
+          %>
+          
+          <% tarefas.forEach(tarefa => { 
+              const hoje = new Date();
+              hoje.setHours(0, 0, 0, 0);
+              const vencimento = tarefa.dataVencimento ? new Date(tarefa.dataVencimento) : null;
+              vencimento && vencimento.setHours(0, 0, 0, 0);
+              const atrasada = !tarefa.concluida && vencimento && vencimento < hoje;
+              const proximo = !tarefa.concluida && vencimento && vencimento.getTime() === hoje.getTime();
+              const priorityClass = atrasada ? 'priority-high' : (proximo ? 'priority-medium' : 'priority-low');
+              
+              // Dados para filtragem
+              let tarefaClasses = [];
+              if (tarefa.concluida) tarefaClasses.push('concluida');
+              if (!tarefa.concluida) tarefaClasses.push('pendente');
+              if (atrasada) tarefaClasses.push('atrasada');
+          %>
+            <li class="list-group-item <%= priorityClass %> tarefa-item <%= tarefaClasses.join(' ') %>">
+              <div class="tarefa-content">
+                <span class="tarefa-titulo <%= tarefa.concluida ? 'text-decoration-line-through text-muted' : '' %>">
+                  <%= tarefa.titulo %>
+                </span>
+                <% if (tarefa.descricao) { %>
+                  <p class="mb-1 <%= tarefa.concluida ? 'text-decoration-line-through text-muted' : '' %> tarefa-descricao text-truncate">
+                    <%= tarefa.descricao %>
+                  </p>
+                <% } %>
+                <div class="tarefa-meta">
+                  <% if (tarefa.dataVencimento) { %>
+                    <span class="tarefa-vencimento <%= atrasada ? 'urgente' : proximo ? 'proximo' : '' %>">
+                      <i class="bi bi-calendar-event"></i> 
+                      <%= new Date(tarefa.dataVencimento).toLocaleDateString('pt-BR') %>
+                    </span>
+                  <% } %>
+                </div>
+              </div>
+              <div class="tarefa-acoes">
+                <div class="btn-group">
+                  <form action="/tarefas/<%= tarefa.id %>/status" method="POST" class="status-form">
+                    <input type="hidden" name="concluida" value="<%= !tarefa.concluida %>">
+                    <button type="submit" class="btn btn-sm btn-<%= tarefa.concluida ? 'secondary' : 'success' %>">
+                      <i class="bi <%= tarefa.concluida ? 'bi-arrow-counterclockwise' : 'bi-check-lg' %>"></i>
+                    </button>
+                  </form>
+                  <a href="/tarefas/<%= tarefa.id %>/editar" class="btn btn-sm btn-primary" style="background-color: #4a9fe9; border-color: #4a9fe9;">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <form action="/tarefas/<%= tarefa.id %>/excluir" method="POST" class="delete-form">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </li>
+          <% }); %>
+          
+          <li class="list-group-item empty-state empty-state-concluidas" style="display: none;">
+            <div class="text-center py-4">
+                <i class="bi bi-check-circle"></i>
+                <p class="mb-0 text-muted">Nenhuma tarefa concluída</p>
+            </div>
+          </li>
+          <li class="list-group-item empty-state empty-state-pendentes" style="display: none;">
+            <div class="text-center py-4">
+                <i class="bi bi-hourglass-split"></i>
+                <p class="mb-0 text-muted">Nenhuma tarefa pendente</p>
+            </div>
+          </li>
+          <li class="list-group-item empty-state empty-state-atrasadas" style="display: none;">
+            <div class="text-center py-4">
+                <i class="bi bi-exclamation-triangle"></i>
+                <p class="mb-0 text-muted">Nenhuma tarefa atrasada</p>
+            </div>
+          </li>
+          
+        <% } else { %>
+          <li class="list-group-item empty-state">
+            <div class="text-center py-4">
+                <i class="bi bi-list-task"></i>
+                <p class="mb-0 text-muted">Nenhuma tarefa encontrada</p>
+            </div>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterSelect = document.getElementById('filtroTarefas');
+      const tarefaItems = document.querySelectorAll('.tarefa-item');
+      const emptyStateConcluidas = document.querySelector('.empty-state-concluidas');
+      const emptyStatePendentes = document.querySelector('.empty-state-pendentes');
+      const emptyStateAtrasadas = document.querySelector('.empty-state-atrasadas');
+      
+      let concluidas = 0;
+      let pendentes = 0;
+      let atrasadas = 0;
+      
+      tarefaItems.forEach(item => {
+        if (item.classList.contains('concluida')) concluidas++;
+        if (item.classList.contains('pendente')) pendentes++;
+        if (item.classList.contains('atrasada')) atrasadas++;
+      });
+
+      filterSelect.addEventListener('change', function() {
+        const filter = this.value;
+        let visibleCount = 0;
+        
+        if (emptyStateConcluidas) emptyStateConcluidas.style.display = 'none';
+        if (emptyStatePendentes) emptyStatePendentes.style.display = 'none';
+        if (emptyStateAtrasadas) emptyStateAtrasadas.style.display = 'none';
+        
+        tarefaItems.forEach(item => {
+          if (filter === 'todas') {
+            item.style.display = 'flex';
+            visibleCount++;
+          } else if (filter === 'concluidas' && item.classList.contains('concluida')) {
+            item.style.display = 'flex';
+            visibleCount++;
+          } else if (filter === 'pendentes' && item.classList.contains('pendente')) {
+            item.style.display = 'flex';
+            visibleCount++;
+          } else if (filter === 'atrasadas' && item.classList.contains('atrasada')) {
+            item.style.display = 'flex';
+            visibleCount++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+        
+        if (filter === 'concluidas' && concluidas === 0) {
+          if (emptyStateConcluidas) emptyStateConcluidas.style.display = 'block';
+        } else if (filter === 'pendentes' && pendentes === 0) {
+          if (emptyStatePendentes) emptyStatePendentes.style.display = 'block';
+        } else if (filter === 'atrasadas' && atrasadas === 0) {
+          if (emptyStateAtrasadas) emptyStateAtrasadas.style.display = 'block';
+        }
+      });
+
+      const statusForms = document.querySelectorAll('.status-form');
+      statusForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(this);
+          const url = this.getAttribute('action');
+          
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+            window.location.reload();
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+      
+      const deleteForms = document.querySelectorAll('.delete-form');
+      deleteForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+          if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
+            e.preventDefault();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
