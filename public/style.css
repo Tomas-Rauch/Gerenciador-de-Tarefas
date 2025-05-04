@@ -1,0 +1,194 @@
+/* Estilo global */
+body {
+    background-color: #f5f5f5; /* Cinza suave para o fundo */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Estilo para container com fundo branco */
+  .container {
+    max-width: 1200px;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  h1 {
+    color: #343a40;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .card-header {
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+  }
+  
+  /* Ajuste na cor do cabeçalho para azul mais claro */
+  .card-header.bg-primary {
+    background-color: #4a9fe9 !important; /* Tom de azul mais claro e suave */
+  }
+  
+  /* Estilização do dropdown de filtro */
+  .filter-select {
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    width: 100%;
+    cursor: pointer;
+    background-color: #fff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .filter-select:focus {
+    border-color: #4a9fe9;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(74, 159, 233, 0.25);
+  }
+  
+  .list-group-item {
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 1rem 1.25rem;
+  }
+  
+  .list-group-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .tarefa-content {
+    flex: 1;
+    min-width: 0; /* Importante para permitir truncamento */
+    margin-right: 15px;
+    /* Importante: limita o tamanho e impede que o conteúdo saia da caixa */
+    max-width: calc(100% - 150px); 
+    overflow: hidden;
+  }
+  
+  .tarefa-titulo {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-size: 1.05rem;
+  }
+  
+  /* Novo estilo para a descrição da tarefa */
+  .tarefa-descricao {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    font-size: 0.9rem;
+    color: #495057;
+  }
+  
+  .tarefa-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px;
+  }
+  
+  .tarefa-vencimento {
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .tarefa-vencimento i {
+    margin-right: 4px;
+  }
+  
+  .tarefa-vencimento.urgente {
+    color: #dc3545;
+    font-weight: bold;
+  }
+  
+  .tarefa-vencimento.proximo {
+    color: #fd7e14;
+    font-weight: 500;
+  }
+  
+  .tarefa-acoes {
+    display: flex;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  
+  .text-decoration-line-through {
+    text-decoration: line-through;
+  }
+  
+  .btn-group {
+    display: flex;
+    gap: 10px; /* Aumentado o espaçamento entre os botões */
+  }
+  
+  .btn-sm {
+    padding: 0.375rem 0.75rem; /* Botões maiores */
+    font-size: 0.875rem;
+    margin: 0 2px;
+    border-radius: 0.375rem;
+  }
+  
+  /* Estilos para o formulário de data */
+  .form-control-date {
+    width: 100%;
+  }
+  
+  /* Estilos para destacar prioridades */
+  .priority-high {
+    border-left: 5px solid #dc3545;
+  }
+  
+  .priority-medium {
+    border-left: 5px solid #fd7e14;
+  }
+  
+  .priority-low {
+    border-left: 5px solid #28a745;
+  }
+  
+  .priority-none {
+    border-left: 5px solid #6c757d;
+  }
+  
+  /* Fix para formulários inline */
+  .status-form, .delete-form {
+    display: inline;
+  }
+  
+  /* Mensagens de estado vazio */
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+  }
+  
+  .empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #adb5bd;
+  }
+  
+  .empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
