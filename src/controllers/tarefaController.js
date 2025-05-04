@@ -1,14 +1,11 @@
 const TarefaModel = require('../models/tarefaModel');
 
-// Controlador para gerenciar tarefas
 class TarefaController {
-  // Renderiza a página inicial com a lista de tarefas
   static listarTarefas(req, res) {
     const tarefas = TarefaModel.obterTodas();
     res.render('index', { tarefas });
   }
 
-  // Cria uma nova tarefa
   static criarTarefa(req, res) {
     const { titulo, descricao, dataVencimento } = req.body;
     
@@ -18,7 +15,6 @@ class TarefaController {
     
     const novaTarefa = TarefaModel.criar(titulo, descricao, dataVencimento);
     
-    // Verificar se a requisição espera HTML ou JSON
     if (req.headers.accept && req.headers.accept.includes('application/json')) {
       return res.status(201).json(novaTarefa);
     } else {
@@ -26,7 +22,6 @@ class TarefaController {
     }
   }
 
-  // Renderiza o formulário de edição
   static formEditarTarefa(req, res) {
     const tarefa = TarefaModel.obterPorId(req.params.id);
     
@@ -40,7 +35,6 @@ class TarefaController {
     });
   }
 
-  // Atualiza uma tarefa existente
   static atualizarTarefa(req, res) {
     const { id } = req.params;
     const { titulo, descricao, dataVencimento } = req.body;
@@ -55,7 +49,6 @@ class TarefaController {
       return res.status(404).json({ erro: 'Tarefa não encontrada' });
     }
     
-    // Verificar se a requisição espera HTML ou JSON
     if (req.headers.accept && req.headers.accept.includes('application/json')) {
       return res.json(tarefaAtualizada);
     } else {
@@ -63,7 +56,6 @@ class TarefaController {
     }
   }
 
-  // Exclui uma tarefa
   static excluirTarefa(req, res) {
     const { id } = req.params;
     const tarefaExcluida = TarefaModel.excluir(id);
@@ -72,7 +64,6 @@ class TarefaController {
       return res.status(404).json({ erro: 'Tarefa não encontrada' });
     }
     
-    // Verificar se a requisição espera HTML ou JSON
     if (req.headers.accept && req.headers.accept.includes('application/json')) {
       return res.json({ mensagem: 'Tarefa excluída com sucesso', tarefa: tarefaExcluida });
     } else {
@@ -80,12 +71,10 @@ class TarefaController {
     }
   }
 
-  // Altera o status de uma tarefa (concluída/não concluída)
   static alterarStatusTarefa(req, res) {
     const { id } = req.params;
     const { concluida } = req.body;
     
-    // Corrigido: Converter o valor de texto para booleano adequadamente
     const concluidaBoolean = concluida === 'true' || concluida === true;
     
     const tarefaAtualizada = TarefaModel.alterarStatus(id, concluidaBoolean);
@@ -94,7 +83,6 @@ class TarefaController {
       return res.status(404).json({ erro: 'Tarefa não encontrada' });
     }
     
-    // Verificar se a requisição espera HTML ou JSON
     if (req.headers.accept && req.headers.accept.includes('application/json')) {
       return res.json(tarefaAtualizada);
     } else {
@@ -102,7 +90,6 @@ class TarefaController {
     }
   }
   
-  // Novo método para filtrar tarefas
   static filtrarTarefas(req, res) {
     const { filtro } = req.params;
     let tarefas = TarefaModel.obterTodas();

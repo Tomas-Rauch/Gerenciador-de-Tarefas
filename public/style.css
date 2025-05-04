@@ -1,10 +1,8 @@
-/* Estilo global */
-body {
-    background-color: #f5f5f5; /* Cinza suave para o fundo */
+  body {
+    background-color: #f5f5f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   
-  /* Estilo para container com fundo branco */
   .container {
     max-width: 1200px;
     background-color: white;
@@ -34,12 +32,10 @@ body {
     padding: 0.75rem 1.25rem;
   }
   
-  /* Ajuste na cor do cabeçalho para azul mais claro */
   .card-header.bg-primary {
-    background-color: #4a9fe9 !important; /* Tom de azul mais claro e suave */
+    background-color: #4a9fe9 !important;
   }
   
-  /* Estilização do dropdown de filtro */
   .filter-select {
     padding: 0.75rem;
     border-radius: 0.375rem;
@@ -70,9 +66,8 @@ body {
   
   .tarefa-content {
     flex: 1;
-    min-width: 0; /* Importante para permitir truncamento */
+    min-width: 0;
     margin-right: 15px;
-    /* Importante: limita o tamanho e impede que o conteúdo saia da caixa */
     max-width: calc(100% - 150px); 
     overflow: hidden;
   }
@@ -88,7 +83,6 @@ body {
     font-size: 1.05rem;
   }
   
-  /* Novo estilo para a descrição da tarefa */
   .tarefa-descricao {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -138,22 +132,20 @@ body {
   
   .btn-group {
     display: flex;
-    gap: 10px; /* Aumentado o espaçamento entre os botões */
+    gap: 10px;
   }
   
   .btn-sm {
-    padding: 0.375rem 0.75rem; /* Botões maiores */
+    padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
     margin: 0 2px;
     border-radius: 0.375rem;
   }
   
-  /* Estilos para o formulário de data */
   .form-control-date {
     width: 100%;
   }
   
-  /* Estilos para destacar prioridades */
   .priority-high {
     border-left: 5px solid #dc3545;
   }
@@ -170,12 +162,10 @@ body {
     border-left: 5px solid #6c757d;
   }
   
-  /* Fix para formulários inline */
   .status-form, .delete-form {
     display: inline;
   }
   
-  /* Mensagens de estado vazio */
   .empty-state {
     text-align: center;
     padding: 2rem;
