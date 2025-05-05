@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const TarefaController = require('../controllers/tarefaController');
+const methodOverride = require('method-override');
+
+router.use(methodOverride('_method'));
 
 /**
  * @swagger
@@ -120,7 +123,7 @@ router.get('/tarefas/:id/editar', TarefaController.formEditarTarefa);
 /**
  * @swagger
  * /tarefas/{id}:
- *   post:
+ *   put:
  *     summary: Atualiza uma tarefa existente
  *     tags: [Tarefas]
  *     parameters:
@@ -156,12 +159,13 @@ router.get('/tarefas/:id/editar', TarefaController.formEditarTarefa);
  *       404:
  *         description: Tarefa não encontrada
  */
+router.put('/tarefas/:id', TarefaController.atualizarTarefa);
 router.post('/tarefas/:id', TarefaController.atualizarTarefa);
 
 /**
  * @swagger
- * /tarefas/{id}/excluir:
- *   post:
+ * /tarefas/{id}:
+ *   delete:
  *     summary: Exclui uma tarefa
  *     tags: [Tarefas]
  *     parameters:
@@ -177,12 +181,13 @@ router.post('/tarefas/:id', TarefaController.atualizarTarefa);
  *       404:
  *         description: Tarefa não encontrada
  */
+router.delete('/tarefas/:id', TarefaController.excluirTarefa);
 router.post('/tarefas/:id/excluir', TarefaController.excluirTarefa);
 
 /**
  * @swagger
  * /tarefas/{id}/status:
- *   post:
+ *   patch:
  *     summary: Altera o status de conclusão de uma tarefa
  *     tags: [Tarefas]
  *     parameters:
@@ -212,6 +217,7 @@ router.post('/tarefas/:id/excluir', TarefaController.excluirTarefa);
  *       404:
  *         description: Tarefa não encontrada
  */
+router.patch('/tarefas/:id/status', TarefaController.alterarStatusTarefa);
 router.post('/tarefas/:id/status', TarefaController.alterarStatusTarefa);
 
 /**
