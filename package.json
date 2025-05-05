@@ -1,20 +1,19 @@
 {
-  "name": "gerenciador-de-tarefas",
+  "name": "gerenciador-tarefas",
   "version": "1.0.0",
-  "description": "Trabalho de Criação de Sites do 1° trimestre",
-  "main": "index.js",
+  "description": "Gerenciador de tarefas com métodos HTTP",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^2.2.0",
-    "ejs": "^3.1.10",
-    "express": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "method-override": "^3.0.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
