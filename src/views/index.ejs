@@ -33,7 +33,7 @@
         <h5 class="mb-0"><%= locals.tarefaEdit ? 'Editar Tarefa' : 'Nova Tarefa' %></h5>
       </div>
       <div class="card-body">
-        <form action="<%= locals.tarefaEdit ? `/tarefas/${tarefaEdit.id}` : '/tarefas' %>" method="POST">
+        <form action="<%= locals.tarefaEdit ? `/tarefas/${tarefaEdit.id}?_method=PUT` : '/tarefas' %>" method="POST">
           <div class="mb-3">
             <label for="titulo" class="form-label">Título</label>
             <input type="text" class="form-control" id="titulo" name="titulo" 
@@ -121,7 +121,7 @@
               </div>
               <div class="tarefa-acoes">
                 <div class="btn-group">
-                  <form action="/tarefas/<%= tarefa.id %>/status" method="POST" class="status-form">
+                  <form action="/tarefas/<%= tarefa.id %>/status?_method=PATCH" method="POST" class="status-form">
                     <input type="hidden" name="concluida" value="<%= !tarefa.concluida %>">
                     <button type="submit" class="btn btn-sm btn-<%= tarefa.concluida ? 'secondary' : 'success' %>">
                       <i class="bi <%= tarefa.concluida ? 'bi-arrow-counterclockwise' : 'bi-check-lg' %>"></i>
@@ -130,7 +130,7 @@
                   <a href="/tarefas/<%= tarefa.id %>/editar" class="btn btn-sm btn-primary" style="background-color: #4a9fe9; border-color: #4a9fe9;">
                     <i class="bi bi-pencil"></i>
                   </a>
-                  <form action="/tarefas/<%= tarefa.id %>/excluir" method="POST" class="delete-form">
+                  <form action="/tarefas/<%= tarefa.id %>?_method=DELETE" method="POST" class="delete-form">
                     <button type="submit" class="btn btn-sm btn-danger">
                       <i class="bi bi-trash"></i>
                     </button>
@@ -254,6 +254,41 @@
         form.addEventListener('submit', function(e) {
           if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
             e.preventDefault();
+          }
+        });
+      });
+
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+          if (this.classList.contains('delete-form') || this.classList.contains('status-form')) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const url = this.getAttribute('action');
+            
+            let method = 'POST';
+            
+            if (url.includes('_method=DELETE')) {
+              method = 'DELETE';
+            } else if (url.includes('_method=PUT')) {
+              method = 'PUT';
+            } else if (url.includes('_method=PATCH')) {
+              method = 'PATCH';
+            }
+            
+            fetch(url, {
+              method: method,
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              body: new URLSearchParams(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+              window.location.reload();
+            })
+            .catch(error => console.error('Error:', error));
           }
         });
       });
