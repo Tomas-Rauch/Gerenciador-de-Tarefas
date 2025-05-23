@@ -9,8 +9,8 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API para gerenciar tarefas com funcionalidades de criação, edição, exclusão e filtragem',
       contact: {
-        name: 'Seu Nome',
-        email: 'seu.email@exemplo.com',
+        name: 'Tomas',
+        email: 'tomrauch11@gmail.com',
       },
     },
     servers: [
